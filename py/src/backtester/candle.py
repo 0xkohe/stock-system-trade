@@ -33,7 +33,7 @@ class CandleSticks:
 
 
 def load_csv(paths: list[Path]) -> CandleSticks:
-    candles: list[CandleStick] = []
+    candles_by_date: dict[datetime.date, CandleStick] = {}
     for path in paths:
         with open(path, encoding="shift_jis", errors="replace") as f:
             reader = csv.reader(f)
@@ -58,6 +58,6 @@ def load_csv(paths: list[Path]) -> CandleSticks:
                 h = float(row[2].strip().strip('"'))
                 l = float(row[3].strip().strip('"'))
                 c = float(row[4].strip().strip('"'))
-                candles.append(CandleStick(date=dt, open=o, high=h, low=l, close=c))
+                candles_by_date[dt] = CandleStick(date=dt, open=o, high=h, low=l, close=c)
 
-    return CandleSticks(candles)
+    return CandleSticks(list(candles_by_date.values()))
