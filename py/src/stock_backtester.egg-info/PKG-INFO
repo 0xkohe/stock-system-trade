@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: stock-backtester
+Version: 0.1.0
+Summary: Stock trading backtester with DMA pullback strategy
+Requires-Python: >=3.11
