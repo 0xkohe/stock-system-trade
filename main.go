@@ -32,6 +32,7 @@ func targetFiles(tDir string) (tFiles []string, err error) {
 
 func isDMAUp(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 
+	// 連続の情報判定のためにfor文
 	for j := 0; j < 1; j++ {
 		if cs.DMA(10, i-j) <= cs.DMA(10, i-(j+1)) {
 			return false
@@ -39,11 +40,15 @@ func isDMAUp(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 	}
 
 	/*
+	*/
+	/*
 		for j := 0; j < 1; j++ {
 			if cs.DMA(25, i-j) <= cs.DMA(25, i-(j+1)) {
 				return false
 			}
 		}
+	*/
+	/*
 			for j := 0; j < 1; j++ {
 				if cs.DMA(60, i-j) <= cs.DMA(60, i-(j+1)) {
 					return false
@@ -60,6 +65,8 @@ func isDMADown(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 			return false
 		}
 	}
+	/*
+	*/
 
 	/*
 		for j := 0; j < 1; j++ {
@@ -67,6 +74,8 @@ func isDMADown(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 				return false
 			}
 		}
+	*/
+	/*
 			for j := 0; j < 1; j++ {
 				if cs.DMA(60, i-j) >= cs.DMA(60, i-(j+1)) {
 					return false
@@ -223,3 +232,4 @@ func main() {
 	sDate, _ := time.Parse(layout, "2013/01/01")
 	trade(sDate, vs, *lc, *lp, *tick)
 }
+
