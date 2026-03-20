@@ -1,4 +1,0 @@
-scenario,one_way_cost_pct,is_ret,is_pf,is_dd,is_n,oos_ret,oos_pf,oos_dd,oos_n
-gross,0.00,142.4,1.69,23.3,265,143.6,1.83,19.5,253
-one_way_0.10pct,0.10,89.4,1.38,27.3,265,93.0,1.46,22.3,253
-one_way_0.20pct,0.20,36.4,1.13,32.8,265,42.4,1.18,29.8,253

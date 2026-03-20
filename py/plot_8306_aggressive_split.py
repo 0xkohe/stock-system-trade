@@ -1,4 +1,4 @@
-"""8306 最有力ルール(0.5% + 前日高安手仕舞い)の売買チャートを出力する。"""
+"""8306 最有力ルールの勝ち/負けトレードを別チャートで出力する。"""
 from __future__ import annotations
 
 import datetime
@@ -193,24 +193,42 @@ def draw_chart(cs: CandleSticks, trades: list[dict], start_date: datetime.date, 
 
 def main() -> None:
     base_dir = Path(__file__).resolve().parent.parent
-    csv_files = sorted((base_dir / "data" / "8306").glob("*.csv"))
+    csv_files = [base_dir / "data" / "8306" / "8306.T.csv"]
     cs = load_csv(csv_files)
     trades = run_backtest_with_trades(cs, datetime.date(2013, 1, 1))
 
-    out_dir = Path("charts/8306_aggressive")
+    winners = [t for t in trades if t["pct_return"] > 0]
+    losers = [t for t in trades if t["pct_return"] <= 0]
+
+    out_dir = Path("charts/8306_aggressive_split")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     data_end = cs[len(cs) - 1].date
     recent_start = datetime.date(data_end.year - 1, data_end.month, data_end.day)
-    periods = [
-        (recent_start, data_end, "8306 0.5%+前日高安 直近1年", out_dir / "chart_1year.png"),
-        (datetime.date(2016, 1, 1), datetime.date(2016, 12, 31), "8306 0.5%+前日高安 2016", out_dir / "chart_2016.png"),
-        (datetime.date(2018, 1, 1), datetime.date(2018, 12, 31), "8306 0.5%+前日高安 2018", out_dir / "chart_2018.png"),
-        (datetime.date(2025, 1, 1), datetime.date(2025, 12, 31), "8306 0.5%+前日高安 2025", out_dir / "chart_2025.png"),
-    ]
-    for start_date, end_date, title, out_path in periods:
-        draw_chart(cs, trades, start_date, end_date, out_path, title)
-        print(f"保存: {out_path}")
+
+    draw_chart(cs, winners, recent_start, data_end, out_dir / "chart_winners_1year.png", "8306 勝ちトレード 直近1年")
+    draw_chart(cs, losers, recent_start, data_end, out_dir / "chart_losers_1year.png", "8306 負けトレード 直近1年")
+    draw_chart(cs, winners, cs[0].date, data_end, out_dir / "chart_winners_all.png", "8306 勝ちトレード 全期間")
+    draw_chart(cs, losers, cs[0].date, data_end, out_dir / "chart_losers_all.png", "8306 負けトレード 全期間")
+    draw_chart(cs, winners, datetime.date(2016, 1, 1), datetime.date(2016, 12, 31), out_dir / "chart_winners_2016.png", "8306 勝ちトレード 2016")
+    draw_chart(cs, losers, datetime.date(2016, 1, 1), datetime.date(2016, 12, 31), out_dir / "chart_losers_2016.png", "8306 負けトレード 2016")
+
+    years = sorted({t["entry_date"].year for t in trades})
+    for year in years:
+        year_start = datetime.date(year, 1, 1)
+        year_end = datetime.date(year, 12, 31)
+        draw_chart(cs, winners, year_start, year_end, out_dir / f"chart_winners_{year}.png", f"8306 勝ちトレード {year}")
+        draw_chart(cs, losers, year_start, year_end, out_dir / f"chart_losers_{year}.png", f"8306 負けトレード {year}")
+
+    print(f"保存: {out_dir / 'chart_winners_1year.png'}")
+    print(f"保存: {out_dir / 'chart_losers_1year.png'}")
+    print(f"保存: {out_dir / 'chart_winners_all.png'}")
+    print(f"保存: {out_dir / 'chart_losers_all.png'}")
+    print(f"保存: {out_dir / 'chart_winners_2016.png'}")
+    print(f"保存: {out_dir / 'chart_losers_2016.png'}")
+    for year in years:
+        print(f"保存: {out_dir / f'chart_winners_{year}.png'}")
+        print(f"保存: {out_dir / f'chart_losers_{year}.png'}")
 
 
 if __name__ == "__main__":

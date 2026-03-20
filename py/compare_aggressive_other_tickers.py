@@ -102,8 +102,7 @@ def breakout_entry(side: str, today: CandleStick, yesterday: CandleStick) -> flo
     return trigger if today.open >= trigger else today.open
 
 
-def early_entry(side: str, today: CandleStick, yesterday: CandleStick) -> float | None:
-    band = 0.005
+def early_entry(side: str, today: CandleStick, yesterday: CandleStick, band: float = 0.005) -> float | None:
     if side == "BUY":
         trigger = yesterday.close * (1 + band)
         if today.high < trigger:
@@ -141,7 +140,7 @@ def run_b(cs: CandleSticks, start_date: datetime.date) -> list[Trade]:
 
         buy_sig, _ = strategy.check_buy_signal(cs, i)
         if buy_sig:
-            p = breakout_entry("BUY", today, yesterday)
+            p = early_entry("BUY", today, yesterday)
             if p is not None:
                 pos.open("BUY", p)
                 entry_date = today.date
@@ -149,7 +148,7 @@ def run_b(cs: CandleSticks, start_date: datetime.date) -> list[Trade]:
 
         sell_sig, _ = strategy.check_sell_signal(cs, i)
         if sell_sig:
-            p = breakout_entry("SELL", today, yesterday)
+            p = early_entry("SELL", today, yesterday)
             if p is not None:
                 pos.open("SELL", p)
                 entry_date = today.date
@@ -184,7 +183,7 @@ def run_aggressive(cs: CandleSticks, start_date: datetime.date) -> list[Trade]:
 
         buy_sig, _ = strategy.check_buy_signal(cs, i)
         if buy_sig:
-            p = early_entry("BUY", today, yesterday)
+            p = breakout_entry("BUY", today, yesterday)
             if p is not None:
                 pos.open("BUY", p)
                 entry_date = today.date
@@ -192,7 +191,7 @@ def run_aggressive(cs: CandleSticks, start_date: datetime.date) -> list[Trade]:
 
         sell_sig, _ = strategy.check_sell_signal(cs, i)
         if sell_sig:
-            p = early_entry("SELL", today, yesterday)
+            p = breakout_entry("SELL", today, yesterday)
             if p is not None:
                 pos.open("SELL", p)
                 entry_date = today.date

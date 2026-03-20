@@ -61,8 +61,7 @@ def prev_bar_exit(pos: SimplePosition, prev_candle: CandleStick, candle: CandleS
     return 0.0, 0.0, False
 
 
-def early_entry_price(side: str, today: CandleStick, yesterday: CandleStick) -> float | None:
-    band = 0.005
+def early_entry_price(side: str, today: CandleStick, yesterday: CandleStick, band: float = 0.005) -> float | None:
     if side == "BUY":
         trigger = yesterday.close * (1 + band)
         if today.high < trigger:
