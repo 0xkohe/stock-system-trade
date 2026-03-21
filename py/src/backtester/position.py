@@ -23,6 +23,12 @@ def _round_to_tick(price: float, tick: float) -> float:
     return float(r)
 
 
+def pct_return(side: PositionType, entry_price: float, exit_price: float) -> float:
+    if side == PositionType.BUY:
+        return exit_price / entry_price - 1
+    return entry_price / exit_price - 1
+
+
 class Position:
     def __init__(self, lc: float, lp: float, tick: float) -> None:
         self.t = PositionType.NOTHING
@@ -39,6 +45,10 @@ class Position:
 
     def is_doing(self) -> bool:
         return self.t != PositionType.NOTHING
+
+    def reset(self) -> None:
+        self.t = PositionType.NOTHING
+        self.price = 0.0
 
     def buy(self, price: float, candle: CandleStick) -> None:
         self.t = PositionType.BUY

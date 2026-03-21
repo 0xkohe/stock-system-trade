@@ -21,7 +21,27 @@
 - データ取得: [`fetch_data.py`](/home/kooooohe/Documents/tech/stock/py/fetch_data.py)
   `yfinance` から `../data/<ticker>/<ticker>.T.csv` を Shift_JIS で保存。
 - 汎用バックテスト CLI: [`src/backtester/__main__.py`](/home/kooooohe/Documents/tech/stock/py/src/backtester/__main__.py)
-  `--tdir`, `--lc`, `--lp`, `--tick`, `--start-date`, `--down-steps`, `--lookback` を受け取り、年別・合計成績を標準出力に表示。
+  `--tdir`, `--lc`, `--lp`, `--tick`, `--start-date`, `--down-steps`, `--lookback`, `--dma`, `--exit-mode` を受け取り、年別・合計成績を標準出力に表示。
+
+  ```bash
+  # 従来の固定 LC/TP モード（デフォルト）
+  uv run python -m backtester --tdir 8306 --lc 0.03 --lp 0.06
+
+  # 8306 ルールスペック: 前日高安ブレイク + 前日高安手仕舞い
+  uv run python -m backtester --tdir 8306 --dma 10 --down-steps 3 --lookback 7 --exit-mode prev_bar
+  ```
+
+  | オプション | デフォルト | 説明 |
+  |-----------|-----------|------|
+  | `--tdir` | (必須) | 銘柄フォルダ名 |
+  | `--lc` | 0.03 | ロスカット率（`fixed` モード用） |
+  | `--lp` | 0.06 | 利確率（`fixed` モード用） |
+  | `--tick` | 5 | 値刻み |
+  | `--start-date` | 2013/01/01 | 開始日 |
+  | `--down-steps` | 3 | 逆行足の最低本数 |
+  | `--lookback` | 5 | 逆行足を数える直近本数 |
+  | `--dma` | 10,25 | DMA 期間（カンマ区切り） |
+  | `--exit-mode` | fixed | `fixed`（固定 LC/TP）または `prev_bar`（前日高安手仕舞い） |
 - 汎用チャート出力: [`chart.py`](/home/kooooohe/Documents/tech/stock/py/chart.py)
   指定銘柄の売買ポイント付きチャートとエクイティカーブを `charts/` に出力。
 
