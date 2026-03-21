@@ -39,7 +39,7 @@
   | `--tick` | 5 | 値刻み |
   | `--start-date` | 2013/01/01 | 開始日 |
   | `--down-steps` | 3 | 逆行足の最低本数 |
-  | `--lookback` | 5 | 逆行足を数える直近本数 |
+  | `--lookback` | 7 | 逆行足を数える直近本数 |
   | `--dma` | 10,25 | DMA 期間（カンマ区切り） |
   | `--exit-mode` | fixed | `fixed`（固定 LC/TP）または `prev_bar`（前日高安手仕舞い） |
 - 汎用チャート出力: [`chart.py`](/home/kooooohe/Documents/tech/stock/py/chart.py)

@@ -115,7 +115,7 @@ def main() -> None:
     parser.add_argument("--tick", type=float, default=5, help="Tick size (default: 5)")
     parser.add_argument("--start-date", default="2013/01/01", help="Start date (YYYY/MM/DD)")
     parser.add_argument("--down-steps", type=int, default=3, help="下落段数 (default: 3)")
-    parser.add_argument("--lookback", type=int, default=5, help="直近何本中を見るか (default: 5)")
+    parser.add_argument("--lookback", type=int, default=7, help="直近何本中を見るか (default: 7)")
     parser.add_argument("--dma", default="10,25", help="DMA periods, comma-separated (default: 10,25)")
     parser.add_argument("--exit-mode", choices=["fixed", "prev_bar"], default="fixed",
                         help="Exit mode: fixed LC/TP or previous bar high/low (default: fixed)")
