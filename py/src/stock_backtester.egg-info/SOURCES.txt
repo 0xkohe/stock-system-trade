@@ -1,0 +1,12 @@
+pyproject.toml
+src/backtester/__init__.py
+src/backtester/__main__.py
+src/backtester/candle.py
+src/backtester/position.py
+src/backtester/score.py
+src/backtester/strategy.py
+src/stock_backtester.egg-info/PKG-INFO
+src/stock_backtester.egg-info/SOURCES.txt
+src/stock_backtester.egg-info/dependency_links.txt
+src/stock_backtester.egg-info/entry_points.txt
+src/stock_backtester.egg-info/top_level.txt

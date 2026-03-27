@@ -32,23 +32,28 @@ func targetFiles(tDir string) (tFiles []string, err error) {
 
 func isDMAUp(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 
+	// 連続の情報判定のためにfor文
 	for j := 0; j < 1; j++ {
 		if cs.DMA(10, i-j) <= cs.DMA(10, i-(j+1)) {
 			return false
 		}
 	}
 
-	for j := 0; j < 1; j++ {
-		if cs.DMA(25, i-j) <= cs.DMA(25, i-(j+1)) {
-			return false
-		}
-	}
+	/*
+	*/
 	/*
 		for j := 0; j < 1; j++ {
-			if cs.DMA(60, i-j) <= cs.DMA(60, i-(j+1)) {
+			if cs.DMA(25, i-j) <= cs.DMA(25, i-(j+1)) {
 				return false
 			}
 		}
+	*/
+	/*
+			for j := 0; j < 1; j++ {
+				if cs.DMA(60, i-j) <= cs.DMA(60, i-(j+1)) {
+					return false
+				}
+			}
 	*/
 
 	return true
@@ -60,18 +65,22 @@ func isDMADown(cs systemtrade.CandleSticks, dmaNum, i int) bool {
 			return false
 		}
 	}
+	/*
+	*/
 
-	for j := 0; j < 1; j++ {
-		if cs.DMA(25, i-j) >= cs.DMA(25, i-(j+1)) {
-			return false
-		}
-	}
 	/*
 		for j := 0; j < 1; j++ {
-			if cs.DMA(60, i-j) >= cs.DMA(60, i-(j+1)) {
+			if cs.DMA(25, i-j) >= cs.DMA(25, i-(j+1)) {
 				return false
 			}
 		}
+	*/
+	/*
+			for j := 0; j < 1; j++ {
+				if cs.DMA(60, i-j) >= cs.DMA(60, i-(j+1)) {
+					return false
+				}
+			}
 	*/
 
 	return true
@@ -83,7 +92,7 @@ func trade(sDate time.Time, cs systemtrade.CandleSticks, lc, lp, tick float64) {
 	skipc := 60
 	p := 0.0
 
-	po := systemtrade.Position{Lc: lc, Lp: lp, Tick:tick} 
+	po := systemtrade.Position{Lc: lc, Lp: lp, Tick: tick}
 	for i, v := range cs {
 		// fmt.Println(v.Date)
 		// fmt.Printf("%v", v)
@@ -134,8 +143,8 @@ func trade(sDate time.Time, cs systemtrade.CandleSticks, lc, lp, tick float64) {
 		if wasDMAUp && wasStockUnderDMA {
 			// fmt.Println(v.Date)
 			// fmt.Println("TIMING!!!")
-			if v.High > yesterday.High {
-				p = yesterday.High + 1
+			if v.High >= yesterday.High {
+				p = yesterday.High
 				if v.Start > yesterday.High {
 					p = v.Start
 				}
@@ -157,13 +166,13 @@ func trade(sDate time.Time, cs systemtrade.CandleSticks, lc, lp, tick float64) {
 		if wasDMADown && wasStockOverDMA {
 			// fmt.Println(v.Date)
 			// fmt.Println("TIMING!!!")
-			if v.Low < yesterday.Low {
-				p = yesterday.Low - 1
+			if v.Low <= yesterday.Low {
+				p = yesterday.Low
 				if v.Start < yesterday.Low {
 					p = v.Start
 				}
 				po.ShortSell(p, v)
-				// fmt.Printf("ShortSell: %v: %v\n", v.Date, p)
+				//fmt.Printf("ShortSell: %v: %v\n", v.Date, p)
 			}
 			/*
 				if v.Low < cs.DMA(tmpDMA, i-1) {
@@ -201,7 +210,7 @@ func main() {
 		tDir = flag.String("tDir", "0", "target folder name")
 		lc   = flag.Float64("lc", 0.3, "loss cut %")
 		lp   = flag.Float64("lp", 0.07, "limit profit %")
-		tick   = flag.Float64("tick", 1, "tick")
+		tick = flag.Float64("tick", 1, "tick")
 	)
 	flag.Parse()
 
@@ -223,3 +232,4 @@ func main() {
 	sDate, _ := time.Parse(layout, "2013/01/01")
 	trade(sDate, vs, *lc, *lp, *tick)
 }
+
